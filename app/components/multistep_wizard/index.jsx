@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const Card = ({ children }) => {
   return (
@@ -15,10 +16,10 @@ const BackBtn = ({ setStep, step }) => {
   return (
     <motion.button
       onClick={() => setStep(step < 2 ? step : step - 1)}
-      animate={{ opacity: step === 1 ? 0.8 : 1 }}
+      animate={{ opacity: step === 1 ? 0.75 : 1 }}
       className={
-        (step === 1 ? "" : "hover:text-slate-700 ") +
-        "rounded px-2 py-1 text-slate-400 transition-colors"
+        (step === 1 ? "" : "hover:text-slate-800 ") +
+        "rounded-full px-4 py-1 text-slate-600 transition-colors focus-visible:text-blue-600 focus-visible:outline-blue-600 "
       }
     >
       Back
@@ -35,7 +36,7 @@ const NextBtn = ({ setStep, step }) => {
       onClick={() => setStep(step > 4 ? step : step + 1)}
       className={`${
         step > 4 ? "pointer-events-none opacity-50" : ""
-      } bg flex items-center justify-center rounded-full bg-blue-500 px-3.5 py-1.5 font-medium tracking-tight text-white transition-colors hover:bg-blue-600 active:bg-blue-700`}
+      } bg flex items-center justify-center rounded-full bg-blue-500 px-3.5 py-1.5 font-medium tracking-tight text-white transition-colors hover:bg-blue-600 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-700`}
     >
       Continue
     </motion.button>
@@ -156,10 +157,38 @@ const Step = ({ step, currentStep }) => {
 
 const Steps = ({ currentStep }) => {
   return (
-    <header className="flex justify-between rounded pt-3">
+    <section className="flex justify-between rounded pt-1">
       {[1, 2, 3, 4].map((i) => {
         return <Step step={i} currentStep={currentStep} key={i} />;
       })}
+    </section>
+  );
+};
+
+const Header = () => {
+  const [info, showInfo] = useState(false);
+  return (
+    <header>
+      <div className="flex items-center justify-between text-lg font-semibold text-slate-600">
+        <h4>Multi-Step Wizard</h4>
+        <button
+          onClick={() => showInfo(!info)}
+          type="button"
+          className="rounded-full p-1 text-blue-600 shadow-sm transition hover:outline hover:outline-offset-2 hover:outline-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        >
+          <ChevronDownIcon
+            className={`${
+              info ? "rotate-180" : ""
+            } h-5 w-5 transform transition`}
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+      {info && (
+        <div className="mt-4 font-medium text-slate-500">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit, quia!
+        </div>
+      )}
     </header>
   );
 };
@@ -168,6 +197,7 @@ const Content = () => {
   let [step, setStep] = useState(1);
   return (
     <Card>
+      <Header />
       <Steps currentStep={step} />
       <SkeletonDivs />
       <Actions setStep={setStep} step={step} />
